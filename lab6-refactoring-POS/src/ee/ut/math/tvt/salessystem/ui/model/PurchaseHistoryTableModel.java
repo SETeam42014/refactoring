@@ -11,7 +11,8 @@ import ee.ut.math.tvt.salessystem.domain.data.Sale;
 public class PurchaseHistoryTableModel extends SalesSystemTableModel<Sale> {
 	private static final long serialVersionUID = 1L;
 
-	private static DateFormat DATE_FORMAT = new SimpleDateFormat("yyyy.MM.dd HH:mm:ss");
+	private static DateFormat DATE_FORMAT = new SimpleDateFormat(
+			"yyyy.MM.dd HH:mm:ss");
 
 	public PurchaseHistoryTableModel() {
 		super(new String[] { "Id", "Time", "Sum", "Client" });
@@ -26,8 +27,8 @@ public class PurchaseHistoryTableModel extends SalesSystemTableModel<Sale> {
 			return DATE_FORMAT.format(sale.getSellingTime());
 		case 2:
 			return sale.getSum();
-	    case 3:
-	        return sale.getClient();
+		case 3:
+			return sale.getClient();
 		}
 		throw new IllegalArgumentException("Column index out of range");
 	}
@@ -42,11 +43,11 @@ public class PurchaseHistoryTableModel extends SalesSystemTableModel<Sale> {
 
 		for (final Sale sale : rows) {
 			buffer.append(sale.getId() + "\t");
-			//buffer.append(sale.getClient() != null ? sale.getClient().getFirstName() : "" + "\t");
+			// buffer.append(sale.getClient() != null ?
+			// sale.getClient().getFirstName() : "" + "\t");
 			buffer.append(sale.getSum() + "\t");
 			buffer.append("\n");
 		}
-
 		return buffer.toString();
 	}
 }
