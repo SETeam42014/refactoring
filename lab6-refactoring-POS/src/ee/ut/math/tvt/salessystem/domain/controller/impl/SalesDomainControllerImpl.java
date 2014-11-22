@@ -88,10 +88,33 @@ public class SalesDomainControllerImpl implements SalesDomainController {
 		// end transaction
 		tx.commit();
 
-		log.debug("Contents of the current basket:\n");
+		model.getPurchaseHistoryTableModel().addRow(sale);
+
+	}
+
+	public void registerSale(Sale sale) {
+
+		// Begin transaction
+		Transaction tx = session.beginTransaction();
+
+		// sale.setId(null);
+		sale.setSellingTime(new Date());
+
+		// set client who made the sale
+		// sale.setClient(this.model.getSelectedClient());
+
+		// Reduce quantities of stockItems in warehouse
 		for (SoldItem item : sale.getSoldItems()) {
-			log.debug(item.getName());
+			StockItem stockItem = getStockItem(item.getStockItem().getId());
+			stockItem.setQuantity(stockItem.getQuantity() - item.getQuantity());
+			session.save(stockItem);
 		}
+
+		session.save(sale);
+
+		// end transaction
+		tx.commit();
+
 		model.getPurchaseHistoryTableModel().addRow(sale);
 
 	}
