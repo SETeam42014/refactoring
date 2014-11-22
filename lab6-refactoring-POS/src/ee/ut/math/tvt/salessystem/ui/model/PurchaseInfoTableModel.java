@@ -1,34 +1,38 @@
 package ee.ut.math.tvt.salessystem.ui.model;
 
-import java.util.ArrayList;
-
-import org.apache.log4j.Logger;
-
 import ee.ut.math.tvt.salessystem.domain.data.Sale;
 import ee.ut.math.tvt.salessystem.domain.data.SoldItem;
 import ee.ut.math.tvt.salessystem.domain.data.StockItem;
-import ee.ut.math.tvt.salessystem.domain.exception.NotEnoughItemsInStockException;
+import ee.ut.math.tvt.salessystem.domain.exception.SalesSystemException;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import org.apache.log4j.Logger;
 
 /**
  * Purchase history details model.
  */
-public class SaleTableModel extends SalesSystemTableModel<SoldItem> {
+public class PurchaseInfoTableModel extends SalesSystemTableModel<SoldItem> {
 	private static final long serialVersionUID = 1L;
 
-	private static final Logger log = Logger.getLogger(SaleTableModel.class);
+	private static final Logger log = Logger
+			.getLogger(PurchaseInfoTableModel.class);
+
+	private Sale sale;
 
 	private SalesSystemModel model;
 
-	public SaleTableModel() {
+	public PurchaseInfoTableModel() {
 		super(new String[] { "Id", "Name", "Price", "Quantity", "Sum" });
 	}
 
-	public SaleTableModel(SalesSystemModel model) {
+	public PurchaseInfoTableModel(SalesSystemModel model) {
 		this();
+		this.sale = new Sale();
 		this.model = model;
 	}
 
-	@Override
 	protected Object getColumnValue(SoldItem item, int columnIndex) {
 		switch (columnIndex) {
 		case 0:
@@ -45,6 +49,10 @@ public class SaleTableModel extends SalesSystemTableModel<SoldItem> {
 		throw new IllegalArgumentException("Column index out of range");
 	}
 
+	public Object getValueAt(int rowIndex, int columnIndex) {
+		return getColumnValue(sale.getSoldItems().get(rowIndex), columnIndex);
+	}
+
 	@Override
 	public String toString() {
 		final StringBuffer buffer = new StringBuffer();
@@ -53,7 +61,7 @@ public class SaleTableModel extends SalesSystemTableModel<SoldItem> {
 			buffer.append(headers[i] + "\t");
 		buffer.append("\n");
 
-		for (final SoldItem item : rows) {
+		for (final SoldItem item : sale.getSoldItems()) {
 			buffer.append(item.getId() + "\t");
 			buffer.append(item.getName() + "\t");
 			buffer.append(item.getPrice() + "\t");
@@ -65,35 +73,43 @@ public class SaleTableModel extends SalesSystemTableModel<SoldItem> {
 		return buffer.toString();
 	}
 
-	private SoldItem getForStockItem(long stockItemId) {
-		for (SoldItem item : rows) {
-			if (item.getStockItem().getId() == stockItemId) {
+	public SoldItem getForStockItem(long stockItemId) {
+		for (SoldItem item : sale.getSoldItems()) {
+			if (item.getStockItem().getId().equals(stockItemId)) {
 				return item;
 			}
 		}
 		return null;
 	}
 
-	public void addItem(final SoldItem soldItem)
-			throws NotEnoughItemsInStockException {
-
+	/**
+	 * Add new StockItem to table.
+	 */
+	public void addItem(final SoldItem soldItem) throws SalesSystemException {
 		StockItem stockItem = soldItem.getStockItem();
 		long stockItemId = stockItem.getId();
 		SoldItem existingItem = getForStockItem(stockItemId);
-		int quantity = soldItem.getQuantity();
 
-		if (existingItem == null) {
-			validateQuantityInStock(stockItem, quantity);
-			rows.add(soldItem);
-			log.debug("Added " + soldItem.getName() + " quantity of "
-					+ soldItem.getQuantity());
-		} else {
-			quantity += existingItem.getQuantity();
-			validateQuantityInStock(stockItem, quantity);
-			existingItem.setQuantity(quantity);
+		if (existingItem != null) {
+			int totalQuantity = existingItem.getQuantity()
+					+ soldItem.getQuantity();
+			validateQuantityInStock(stockItem, totalQuantity);
+			existingItem.setQuantity(totalQuantity);
+
 			log.debug("Found existing item " + soldItem.getName()
 					+ " increased quantity by " + soldItem.getQuantity());
+
+		} else {
+			validateQuantityInStock(soldItem.getStockItem(),
+					soldItem.getQuantity());
+			this.sale.addSoldItem(soldItem);
+			// rows.add(soldItem);
+			log.debug("Added " + soldItem.getName() + " quantity of "
+					+ soldItem.getQuantity() + " soldItem_ID: "
+					+ soldItem.getSale().getId() + " (" + this.sale.getId()
+					+ ")");
 		}
+
 		fireTableDataChanged();
 	}
 
@@ -102,25 +118,21 @@ public class SaleTableModel extends SalesSystemTableModel<SoldItem> {
 	 * basket.
 	 */
 	public double getTotalPrice() {
-		double price = 0.0;
-		for (SoldItem item : rows) {
-			price += item.getSum();
-		}
-		return price;
+		return this.sale.getSum();
 	}
 
 	private void validateQuantityInStock(StockItem item, int quantity)
-			throws NotEnoughItemsInStockException {
+			throws SalesSystemException {
 
 		if (!model.getWarehouseTableModel().hasEnoughInStock(item, quantity)) {
 			log.info(" -- not enough in stock!");
-			throw new NotEnoughItemsInStockException();
+			throw new SalesSystemException();
 		}
 
 	}
 
-	public static SaleTableModel getEmptyTable() {
-		return new SaleTableModel();
+	public static PurchaseInfoTableModel getEmptyTable() {
+		return new PurchaseInfoTableModel();
 	}
 
 	/**
@@ -128,8 +140,26 @@ public class SaleTableModel extends SalesSystemTableModel<SoldItem> {
 	 * Sale. (Used by the history details table in the HistoryTab).
 	 */
 	public void showSale(Sale sale) {
-		this.rows = new ArrayList<SoldItem>(sale.getSoldItems());
+		this.sale = sale;
 		fireTableDataChanged();
+	}
+
+	public List<SoldItem> getTableRows() {
+		return sale.getSoldItems();
+	}
+
+	@Override
+	public int getRowCount() {
+		try {
+			return this.sale.getSoldItems().size();
+		} catch (Exception e) {
+			return 0;
+		}
+	}
+
+	public void clear() {
+		List<SoldItem> soldItems = this.sale.getSoldItems();
+		soldItems.clear();
 	}
 
 }

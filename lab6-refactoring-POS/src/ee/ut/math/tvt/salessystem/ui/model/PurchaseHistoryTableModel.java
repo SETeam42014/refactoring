@@ -8,7 +8,7 @@ import ee.ut.math.tvt.salessystem.domain.data.Sale;
 /**
  * Purchase history model.
  */
-public class PurchaseHistoryTableModel extends SalesSystemTableModel<Sale> {
+public class PurchaseHistoryTableModel extends DatabaseTableModel<Sale> {
 	private static final long serialVersionUID = 1L;
 
 	private static DateFormat DATE_FORMAT = new SimpleDateFormat(
@@ -48,6 +48,7 @@ public class PurchaseHistoryTableModel extends SalesSystemTableModel<Sale> {
 			buffer.append(sale.getSum() + "\t");
 			buffer.append("\n");
 		}
+
 		return buffer.toString();
 	}
 }

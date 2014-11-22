@@ -1,9 +1,11 @@
 package ee.ut.math.tvt.salessystem.domain.data;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -26,7 +28,7 @@ public class Sale implements DisplayableItem {
 	private Long id;
 
 	@OneToMany(targetEntity = SoldItem.class, mappedBy = "sale", cascade = CascadeType.ALL)
-	private Set<SoldItem> soldItems;
+	private List<SoldItem> soldItems;
 	private Date sellingTime;
 
 	@ManyToOne(fetch = FetchType.EAGER)
@@ -35,15 +37,12 @@ public class Sale implements DisplayableItem {
 
 	/** Empty constructors are used by hibernate */
 	public Sale() {
+		soldItems = new ArrayList<SoldItem>();
 	}
 
-	public Sale(List<SoldItem> goods) throws IllegalArgumentException {
-		if (goods.isEmpty()) {
-			throw new IllegalArgumentException();
-		} else {
-			this.soldItems = new HashSet<SoldItem>(goods);
-			this.sellingTime = new Date();
-		}
+	public Sale(List<SoldItem> goods) {
+		this.soldItems = goods;
+		this.sellingTime = new Date();
 	}
 
 	public Client getClient() {
@@ -62,21 +61,20 @@ public class Sale implements DisplayableItem {
 		this.sellingTime = sellingTime;
 	}
 
-	public Set<SoldItem> getSoldItems() {
+	public List<SoldItem> getSoldItems() {
 		return soldItems;
 	}
 
-	public void setSoldItems(Set<SoldItem> soldItems)
-			throws IllegalArgumentException {
-		if (soldItems.isEmpty()) {
-			throw new IllegalArgumentException();
-		} else {
-			this.soldItems = soldItems;
-		}
+	public void setSoldItems(List<SoldItem> soldItems) {
+		this.soldItems = soldItems;
 	}
 
 	public Long getId() {
 		return id;
+	}
+
+	public void setId(Long id) {
+		this.id = id;
 	}
 
 	public void addSoldItem(SoldItem item) {

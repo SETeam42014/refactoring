@@ -1,7 +1,7 @@
 package ee.ut.math.tvt.salessystem.ui.tabs;
 
 import ee.ut.math.tvt.salessystem.domain.data.Sale;
-import ee.ut.math.tvt.salessystem.ui.model.SaleTableModel;
+import ee.ut.math.tvt.salessystem.ui.model.PurchaseInfoTableModel;
 import ee.ut.math.tvt.salessystem.ui.model.SalesSystemModel;
 import java.awt.Component;
 import java.awt.GridBagConstraints;
@@ -23,7 +23,7 @@ public class HistoryTab {
 
     private SalesSystemModel model;
 
-    private SaleTableModel historyDetailsTableModel;
+    private PurchaseInfoTableModel historyDetailsTableModel;
 
     public HistoryTab(SalesSystemModel model) {
         this.model = model;
@@ -81,7 +81,7 @@ public class HistoryTab {
     private Component drawHistoryDetailsTable() {
 
         // Create the table
-        historyDetailsTableModel = SaleTableModel.getEmptyTable();
+        historyDetailsTableModel = PurchaseInfoTableModel.getEmptyTable();
         JTable table = new JTable(historyDetailsTableModel);
         table.getTableHeader().setReorderingAllowed(false);
 

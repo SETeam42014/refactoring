@@ -18,109 +18,87 @@ import javax.persistence.Table;
 @Table(name = "SOLDITEM")
 public class SoldItem implements Cloneable, DisplayableItem {
 
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Long id;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
-	@ManyToOne(fetch = FetchType.EAGER)
-	@JoinColumn(name = "STOCKITEM_ID")
-	private StockItem stockItem;
+    @ManyToOne(fetch=FetchType.EAGER)
+    @JoinColumn(name = "STOCKITEM_ID")
+    private StockItem stockItem;
 
-	@Column(nullable = false, length = 50)
-	private String name;
+    @Column(nullable = false, length = 50)
+    private String name;
 
-	private Integer quantity;
+    private Integer quantity;
 
-	@Column(name = "itemprice")
-	private double price;
+    @Column(name = "itemprice")
+    private double price;
 
-	@ManyToOne
-	@JoinColumn(name = "SALE_ID", nullable = false)
-	private Sale sale;
+    @ManyToOne
+    @JoinColumn(name = "SALE_ID", nullable = false)
+    private Sale sale;
 
-	/** Empty constructors are used by hibernate */
-	public SoldItem() {
-	}
+    /** Empty constructors are used by hibernate */
+    public SoldItem() {
+    }
 
-	public SoldItem(StockItem stockItem, int quantity)
-			throws IllegalArgumentException {
-		if (quantity < 0) {
-			throw new IllegalArgumentException();
-		} else {
-			this.stockItem = stockItem;
-			this.name = stockItem.getName();
-			this.price = stockItem.getPrice();
-			this.quantity = quantity;
-		}
-	}
+    public SoldItem(StockItem stockItem, int quantity) {
+        this.stockItem = stockItem;
+        this.name = stockItem.getName();
+        this.price = stockItem.getPrice();
+        this.quantity = quantity;
+    }
 
-	public Long getId() {
-		return id;
-	}
+    public Long getId() {
+        return id;
+    }
 
-	public String getName() {
-		return name;
-	}
+    public void setId(Long id) {
+        this.id = id;
+    }
 
-	public void setName(String name) throws IllegalArgumentException {
-		if (name == null || name.isEmpty()) {
-			throw new IllegalArgumentException();
-		} else {
-			this.name = name;
-		}
-	}
+    public String getName() {
+        return name;
+    }
 
-	public double getPrice() {
-		return price;
-	}
+    public void setName(String name) {
+        this.name = name;
+    }
 
-	public void setPrice(double price) throws IllegalArgumentException {
-		if (price < 0.0) {
-			throw new IllegalArgumentException();
-		} else {
-			this.price = price;
-		}
-	}
+    public double getPrice() {
+        return price;
+    }
 
-	public Integer getQuantity() {
-		return quantity;
-	}
+    public void setPrice(double price) {
+        this.price = price;
+    }
 
-	public void setQuantity(Integer quantity) throws IllegalArgumentException {
-		if (quantity < 0) {
-			throw new IllegalArgumentException();
-		} else {
-			this.quantity = quantity;
-		}
-	}
+    public Integer getQuantity() {
+        return quantity;
+    }
 
-	public double getSum() {
-		return price * ((double) quantity);
-	}
+    public void setQuantity(Integer quantity) {
+        this.quantity = quantity;
+    }
 
-	public StockItem getStockItem() {
-		return stockItem;
-	}
+    public double getSum() {
+        return price * ((double) quantity);
+    }
 
-	public void setStockItem(StockItem stockItem)
-			throws IllegalArgumentException {
-		if (stockItem == null) {
-			throw new IllegalArgumentException();
-		} else {
-			this.stockItem = stockItem;
-		}
-	}
+    public StockItem getStockItem() {
+        return stockItem;
+    }
 
-	public Sale getSale() {
-		return sale;
-	}
+    public void setStockItem(StockItem stockItem) {
+        this.stockItem = stockItem;
+    }
 
-	public void setSale(Sale sale) throws IllegalArgumentException {
-		if (sale == null) {
-			throw new IllegalArgumentException();
-		} else {
-			this.sale = sale;
-		}
-	}
+    public Sale getSale() {
+        return sale;
+    }
+
+    public void setSale(Sale sale) {
+        this.sale = sale;
+    }
 
 }

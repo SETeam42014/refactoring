@@ -16,12 +16,11 @@ public abstract class SalesSystemTableModel<T extends DisplayableItem> extends
 
 	private static final long serialVersionUID = 1L;
 
-	protected List<T> rows;
 	protected final String[] headers;
 
 	public SalesSystemTableModel(final String[] headers) {
 		this.headers = headers;
-		rows = new ArrayList<T>();
+		// rows = new ArrayList<T>();
 	}
 
 	/**
@@ -31,7 +30,7 @@ public abstract class SalesSystemTableModel<T extends DisplayableItem> extends
 	 *            selected column index
 	 * @return value displayed in column with specified index
 	 */
-	protected abstract Object getColumnValue(T item, int columnIndex);
+	// protected abstract Object getColumnValue(T item, int columnIndex);
 
 	public int getColumnCount() {
 		return headers.length;
@@ -42,43 +41,41 @@ public abstract class SalesSystemTableModel<T extends DisplayableItem> extends
 		return headers[columnIndex];
 	}
 
-	public int getRowCount() {
-		return rows.size();
-	}
+	public abstract Object getValueAt(final int rowIndex, final int columnIndex);
 
-	public Object getValueAt(final int rowIndex, final int columnIndex) {
-		return getColumnValue(rows.get(rowIndex), columnIndex);
-	}
+	//
+	// // search for item with the specified id
+	// public T getItemById(final long id) {
+	// for (final T item : rows) {
+	// if (item.getId() == id)
+	// return item;
+	// }
+	// throw new NoSuchElementException();
+	// }
+	//
+	public abstract List<T> getTableRows();
+	//
+	// public void clear() {
+	// rows = new ArrayList<T>();
+	// fireTableDataChanged();
+	// }
+	//
+	// public void populateWithData(final List<T> data) {
+	// rows.clear();
+	// rows.addAll(data);
+	// }
+	//
+	// public void addRow(T row) {
+	// rows.add(row);
+	// fireTableDataChanged();
+	// }
+	//
+	// public T getRow(int index) {
+	// return rows.get(index);
+	// }
+	//
+	// public List<T> getRows() {
+	// return rows;
+	// }
 
-	// search for item with the specified id
-	public T getItemById(final long id) {
-		for (final T item : rows) {
-			if (item.getId() == id)
-				return item;
-		}
-		throw new NoSuchElementException();
-	}
-
-	public List<T> getTableRows() {
-		return rows;
-	}
-
-	public void clear() {
-		rows = new ArrayList<T>();
-		fireTableDataChanged();
-	}
-
-	public void populateWithData(final List<T> data) {
-		rows.clear();
-		rows.addAll(data);
-	}
-
-	public void addRow(T row) {
-		rows.add(row);
-		fireTableDataChanged();
-	}
-
-	public T getRow(int index) {
-		return rows.get(index);
-	}
 }
