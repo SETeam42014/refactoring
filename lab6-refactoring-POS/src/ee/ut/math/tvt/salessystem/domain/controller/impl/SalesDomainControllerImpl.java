@@ -76,7 +76,6 @@ public class SalesDomainControllerImpl implements SalesDomainController {
 		// Reduce quantities of stockItems in warehouse
 		for (SoldItem item : soldItems) {
 			// Associate with current sale
-			log.warn("Added SaleID(" + sale.getId() + ") to item.");
 			item.setSale(sale);
 
 			StockItem stockItem = getStockItem(item.getStockItem().getId());
@@ -89,6 +88,10 @@ public class SalesDomainControllerImpl implements SalesDomainController {
 		// end transaction
 		tx.commit();
 
+		log.debug("Contents of the current basket:\n");
+		for (SoldItem item : sale.getSoldItems()) {
+			log.debug(item.getName());
+		}
 		model.getPurchaseHistoryTableModel().addRow(sale);
 
 	}

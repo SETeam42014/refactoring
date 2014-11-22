@@ -145,7 +145,7 @@ public class PurchaseInfoTableModel extends SalesSystemTableModel<SoldItem> {
 	}
 
 	public List<SoldItem> getTableRows() {
-		return sale.getSoldItems();
+		return this.sale.getSoldItems();
 	}
 
 	@Override
