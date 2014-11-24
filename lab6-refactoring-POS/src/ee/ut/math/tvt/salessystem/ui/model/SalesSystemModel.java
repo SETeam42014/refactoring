@@ -79,4 +79,9 @@ public class SalesSystemModel {
 		this.selectedClient = client;
 	}
 
+	public void newSale(Client currentClient) {
+		// this.currentPurchaseTableModel = new PurchaseInfoTableModel(this);
+		this.currentPurchaseTableModel.setSale(new Sale(currentClient));
+	}
+
 }

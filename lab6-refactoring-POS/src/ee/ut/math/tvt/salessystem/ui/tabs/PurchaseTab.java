@@ -215,6 +215,7 @@ public class PurchaseTab {
 		// update selected client
 		// model.setSelectedClient(currentClient);
 		model.getCurrentPurchaseTableModel().getSale().setClient(currentClient);
+		model.newSale(currentClient);
 	}
 
 	// switch UI to the state that allows to initiate new purchase

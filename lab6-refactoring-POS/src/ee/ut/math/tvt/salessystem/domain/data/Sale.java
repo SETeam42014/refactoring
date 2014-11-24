@@ -43,6 +43,11 @@ public class Sale implements DisplayableItem {
 		this.sellingTime = new Date();
 	}
 
+	public Sale(Client client) {
+		this.soldItems = new ArrayList<SoldItem>();
+		this.client = client;
+	}
+
 	public Client getClient() {
 		return client;
 	}
