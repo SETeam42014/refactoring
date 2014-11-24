@@ -104,7 +104,12 @@ public class SalesSystemUI extends JFrame {
 				if (sourceTabbedPane.getTitleAt(index) == "History") {
 					historyTab.refresh();
 				}
-				// StockTab.refresh();
+				if (sourceTabbedPane.getTitleAt(index) == "Warehouse") {
+					stockTab.refresh();
+				}
+				if (sourceTabbedPane.getTitleAt(index) == "Clients") {
+					clientTab.refresh();
+				}
 			}
 		};
 		tabbedPane.addChangeListener(changeListener);
