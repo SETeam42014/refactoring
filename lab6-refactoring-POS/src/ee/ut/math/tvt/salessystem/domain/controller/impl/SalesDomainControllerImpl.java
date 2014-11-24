@@ -104,16 +104,19 @@ public class SalesDomainControllerImpl implements SalesDomainController {
 		// sale.setClient(this.model.getSelectedClient());
 
 		// Reduce quantities of stockItems in warehouse
+		session.save(sale);
 		for (SoldItem item : sale.getSoldItems()) {
 			StockItem stockItem = getStockItem(item.getStockItem().getId());
 			stockItem.setQuantity(stockItem.getQuantity() - item.getQuantity());
 			session.save(stockItem);
 		}
 
-		session.save(sale);
-
 		// end transaction
 		tx.commit();
+
+		HibernateUtil.closeSession();
+
+		this.session = HibernateUtil.currentSession();
 
 		model.getPurchaseHistoryTableModel().addRow(sale);
 

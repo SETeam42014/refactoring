@@ -116,6 +116,7 @@ public class HistoryTab {
 	}
 
 	public void refresh() {
+		// this.model.getPurchaseHistoryTableModel().clear();
 		this.model.getPurchaseHistoryTableModel().populateWithData(
 				this.controller.getAllSales());
 	}

@@ -73,6 +73,7 @@ public abstract class DatabaseTableModel<T extends DisplayableItem> extends
 	public void populateWithData(final List<T> data) {
 		rows.clear();
 		rows.addAll(data);
+		fireTableDataChanged();
 	}
 
 	public void addRow(T row) {
