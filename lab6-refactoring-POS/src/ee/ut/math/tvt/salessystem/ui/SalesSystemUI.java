@@ -101,6 +101,9 @@ public class SalesSystemUI extends JFrame {
 				int index = sourceTabbedPane.getSelectedIndex();
 				System.out.println("Tab changed to: "
 						+ sourceTabbedPane.getTitleAt(index));
+				if (sourceTabbedPane.getTitleAt(index) == "History") {
+					historyTab.refresh();
+				}
 				// StockTab.refresh();
 			}
 		};
